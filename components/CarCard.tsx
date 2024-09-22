@@ -18,7 +18,7 @@ export const CarCard = ({ car }: CarCardProps) => {
     <article className="car-card group">
       <section className="car-card__content">
         <h2 className="car-card__content--title">
-          {car.make} {car.model}
+          {car.make.toUpperCase()} {car.model.toUpperCase()}
         </h2>
       </section>
       <p className="flex mt-6 text-xl font-extrabold">
