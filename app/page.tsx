@@ -2,13 +2,20 @@ import { CarCard } from "@/components/CarCard";
 import { CustomFilter } from "@/components/CustomFilter";
 import { Hero } from "@/components/Hero";
 import { SearchBar } from "@/components/SearchBar";
+import { ShowMore } from "@/components/ShowMore";
 import { fuels, yearsOfProduction } from "@/constants";
 import { Car, Filter } from "@/types";
 import { fetchCars } from "@/utils";
 
+interface HomeProps extends Filter {
+  limit: number;
+}
+
 export default async function Home({
   searchParams,
-}: Readonly<{ searchParams: Filter }>) {
+}: Readonly<{
+  searchParams: HomeProps;
+}>) {
   const allCars = await fetchCars({
     manufacturer: searchParams.manufacturer || "",
     model: searchParams.model || "",
@@ -17,7 +24,6 @@ export default async function Home({
     limit: searchParams.limit || 10,
   });
 
-  console.log(allCars);
   return (
     <main className="overflow-hidden">
       <Hero />
@@ -38,11 +44,18 @@ export default async function Home({
         </article>
 
         {allCars?.length > 0 ? (
-          <article className="home__cars-wrapper">
-            {allCars.map((car: Car, index: number) => (
-              <CarCard car={car} key={index} />
-            ))}
-          </article>
+          <section>
+            <article className="home__cars-wrapper">
+              {allCars.map((car: Car, index: number) => (
+                <CarCard car={car} key={index} />
+              ))}
+            </article>
+
+            <ShowMore
+              pageNumber={(searchParams.limit || 10) / 10}
+              isNext={(searchParams.limit || 10) > allCars.length}
+            />
+          </section>
         ) : (
           <section className="home__error-container">
             <h2 className="text-black text-xl font-bold">Ooops, No Resulst</h2>
